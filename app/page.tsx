@@ -11,6 +11,8 @@ export default function Home() {
   const [shiftDate, setShiftDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [shiftStart, setShiftStart] = useState("");
+  const [shiftEnd, setShiftEnd] = useState("");
   const [tolls, setTolls] = useState("0.00");
   const [quotes, setQuotes] = useState("0.00");
   const [emes, setEmes] = useState("0.00");
@@ -143,6 +145,34 @@ export default function Home() {
             />
           </label>
           
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-zinc-300">
+                Shift Start
+              </label>
+
+              <input
+                type="time"
+                value={shiftStart}
+                onChange={(e) => setShiftStart(e.target.value)}
+                className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium text-zinc-300">
+                Shift End
+              </label>
+
+              <input
+                type="time"
+                value={shiftEnd}
+                onChange={(e) => setShiftEnd(e.target.value)}
+                className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
+              />
+            </div>
+          </div>
+
           <MoneyInput label="Meter Total" value={meterTotal} setValue={setMeterTotal} />
           <MoneyInput label="Less Tolls" value={tolls} setValue={setTolls} />
           <MoneyInput label="Plus Quotes" value={quotes} setValue={setQuotes} />
