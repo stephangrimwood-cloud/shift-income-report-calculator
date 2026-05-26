@@ -63,6 +63,8 @@ export default function Home() {
     id: now.toISOString(),
     createdAt: now.toISOString(),
     shiftDate,
+    shiftStart,
+    shiftEnd,
     meterTotal,
     tolls,
     quotes,
@@ -152,9 +154,11 @@ export default function Home() {
               </label>
 
               <input
-                type="time"
+                type="text"
+                inputMode="numeric"
+                placeholder="HH:MM"
                 value={shiftStart}
-                onChange={(e) => setShiftStart(e.target.value)}
+                onChange={(e) => setShiftStart(formatShiftTime(e.target.value))}
                 className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
               />
             </div>
@@ -165,9 +169,11 @@ export default function Home() {
               </label>
 
               <input
-                type="time"
+                type="text"
+                inputMode="numeric"
+                placeholder="HH:MM"
                 value={shiftEnd}
-                onChange={(e) => setShiftEnd(e.target.value)}
+                onChange={(e) => setShiftEnd(formatShiftTime(e.target.value))}
                 className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
               />
             </div>
@@ -250,6 +256,16 @@ export default function Home() {
       </div>
     </main>
   );
+}
+
+function formatShiftTime(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 4);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  return `${digits.slice(0, 2)}:${digits.slice(2)}`;
 }
 
 function MoneyInput({

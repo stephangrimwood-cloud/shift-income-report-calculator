@@ -9,6 +9,8 @@ type Report = {
   id: string;
   createdAt: string;
   shiftDate?: string;
+  shiftStart?: string;
+  shiftEnd?: string;
   meterTotal: string;
   tolls: string;
   quotes: string;
@@ -37,6 +39,28 @@ const weekDays = [
 
 function money(value: number | undefined | null) {
   return `$${(value ?? 0).toFixed(2)}`;
+}
+
+function calculateShiftDuration(start?: string, end?: string) {
+  if (!start || !end) return "";
+
+  const [startHour, startMinute] = start.split(":").map(Number);
+  const [endHour, endMinute] = end.split(":").map(Number);
+
+  let startTotal = startHour * 60 + startMinute;
+  let endTotal = endHour * 60 + endMinute;
+
+  // Handles overnight shifts
+  if (endTotal < startTotal) {
+    endTotal += 24 * 60;
+  }
+
+  const diff = endTotal - startTotal;
+
+  const hours = Math.floor(diff / 60);
+  const minutes = diff % 60;
+
+  return `${hours}h ${minutes}m worked`;
 }
 
 function signedMoney(value: number | undefined | null) {
@@ -245,6 +269,18 @@ export default function ReportsPage() {
                               weekday: "long",
                             })}
                           </p>
+
+                          {report.shiftStart && report.shiftEnd && (
+                            <div className="mb-4 flex justify-between text-sm text-zinc-400">
+                                <span>
+                                Shift: {report.shiftStart} - {report.shiftEnd}
+                                </span>
+
+                                <span>
+                                {calculateShiftDuration(report.shiftStart, report.shiftEnd)}
+                                </span>
+                            </div>
+                            )}
 
                           <ReceiptRow
                             label="Meter Total"
