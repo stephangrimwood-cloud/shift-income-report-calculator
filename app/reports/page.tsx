@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useSwipeable } from "react-swipeable";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Report = {
@@ -74,8 +76,17 @@ function getMonday(date: Date) {
 }
 
 export default function ReportsPage() {
+    const router = useRouter();
   const [reports, setReports] = useState<Report[]>([]);
   const [openDate, setOpenDate] = useState<string | null>(null);
+
+  const swipeHandlers = useSwipeable({
+  onSwipedRight: () => {
+    router.push("/");
+  },
+  trackTouch: true,
+  preventScrollOnSwipe: false,
+});
 
   const weekStart = getMonday(new Date());
   const weekDates = weekDays.map((day, index) => {
@@ -136,10 +147,13 @@ export default function ReportsPage() {
     "driver-companion-reports",
     JSON.stringify(updatedReports)
   );
+
 }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
+    <main
+  {...swipeHandlers}
+  className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
       <div className="mx-auto max-w-md space-y-5">
         <div className="flex gap-3">
           <Link

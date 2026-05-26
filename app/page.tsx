@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useSwipeable } from "react-swipeable";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
   const [meterTotal, setMeterTotal] = useState("0.00");
   const [shiftDate, setShiftDate] = useState(
     new Date().toISOString().split("T")[0]
@@ -101,8 +104,19 @@ export default function Home() {
   setEftpos("0.00");
   }
 
+  const swipeHandlers = useSwipeable({
+  onSwipedLeft: () => {
+    router.push("/reports");
+  },
+
+  trackTouch: true,
+  preventScrollOnSwipe: false,
+});
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
+    <main
+  {...swipeHandlers}
+  className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
       <div className="mx-auto max-w-md space-y-5">
         <div className="space-y-1">
           <h1 className="text-4xl font-black tracking-tight text-zinc-100">
