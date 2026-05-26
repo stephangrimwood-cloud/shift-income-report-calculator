@@ -16,11 +16,10 @@ export const metadata: Metadata = {
   title: "Shift Income Report Calculator",
   description: "Taxi shift settlement calculator",
   manifest: "/manifest.webmanifest",
-  themeColor: "#2b2b2c",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2b2b2c",
+  themeColor: "#2b2b2c"
 };
 
 export default function RootLayout({
