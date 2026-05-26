@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Shift Income Report Calculator",
-    short_name: "Shift Calc",
-    description: "Taxi shift settlement calculator",
+    name: "Driver Companion",
+    short_name: "Driver Companion",
+    description: "Taxi shift settlement and earnings companion",
     start_url: "/",
     display: "standalone",
     background_color: "#2b2b2c",
