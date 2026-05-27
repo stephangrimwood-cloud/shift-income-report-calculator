@@ -59,16 +59,26 @@ function getPeakWindows(arrivals: any[]) {
 
   arrivals.forEach((arrival) => {
     const time = arrival.estimated || arrival.scheduled;
-    const hour = time?.split(":")[0];
+    const hour = Number(time?.split(":")[0]);
 
-    if (!hour) return;
+    if (isNaN(hour)) return;
 
     hourCounts[hour] = (hourCounts[hour] || 0) + 1;
   });
 
-  return Object.entries(hourCounts)
+  const busyHours = Object.entries(hourCounts)
     .filter(([, count]) => count >= 3)
-    .map(([hour]) => `${hour}:00–${hour}:59`);
+    .map(([hour]) => Number(hour))
+    .sort((a, b) => a - b);
+
+  if (busyHours.length === 0) {
+    return null;
+  }
+
+  const startHour = busyHours[0];
+  const endHour = busyHours[busyHours.length - 1] + 1;
+
+  return `${String(startHour).padStart(2, "0")}:00 → ${String(endHour).padStart(2, "0")}:00`;
 }
 
 function getStartOfWeek(date: Date) {
@@ -171,27 +181,43 @@ export default function AirportArrivalsPage() {
             return (
               <div
                 key={day.day}
-                className="rounded-2xl border border-[#4a4a4b] bg-[#3a3a3b] p-4 shadow-lg"
-              >
+                className={`rounded-2xl border p-4 shadow-lg transition-colors ${
+                    day.airportDate === formatAirportDate(new Date())
+                    ? "border-amber-400/30 bg-[#3f3a32]"
+                    : "border-[#4a4a4b] bg-[#3a3a3b]"
+                }`}
+                >
                 <button
                   onClick={() => setOpenDay(isOpen ? null : day.day)}
                   className="w-full text-left"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <div className="text-lg font-semibold text-white">
-                        {day.day} {day.date}
-                      </div>
+                      <div className="flex items-baseline gap-2">
+                        <div className="text-lg font-semibold text-white">
+                            {day.day}
+                        </div>
 
-                      <div className="mt-1 text-sm text-zinc-300">
-                        Intl: {internationalCount} | Domestic: {domesticCount}
-                      </div>
+                        <div className="text-sm font-medium text-zinc-300">
+                            {day.date}
+                        </div>
                     </div>
 
-                    <div className="text-right text-sm text-zinc-300">
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                        <div className="rounded-full bg-sky-500/10 px-2 py-1 text-sky-200">
+                            Intl: {internationalCount}
+                        </div>
+
+                        <div className="rounded-full bg-[#2f2f30] px-2 py-1 text-zinc-300">
+                            Domestic: {domesticCount}
+                        </div>
+                        </div>
+                    </div>
+
+                    <div className="pt-2 text-right text-sm text-zinc-300">
                       <div>Peak</div>
                       <div className="text-zinc-100">
-                        {peakWindows.length > 0 ? peakWindows.join(", ") : "No peak window"}
+                        {peakWindows ?? "No peak window"}
                       </div>
                     </div>
                   </div>
@@ -225,7 +251,15 @@ export default function AirportArrivalsPage() {
                                 {arrival.estimated || arrival.scheduled}
                                 </div>
 
-                                <div className="font-medium text-zinc-100">
+                               <div
+                                className={`font-medium ${
+                                    arrival.status === "Landed"
+                                    ? "text-emerald-400"
+                                    : arrival.status === "Delayed"
+                                    ? "text-red-400"
+                                    : "text-zinc-100"
+                                }`}
+                                >
                                 {arrival.status}
                                 </div>
                             </div>
