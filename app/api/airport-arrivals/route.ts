@@ -8,6 +8,7 @@ type AirportArrival = {
   scheduled: string;
   estimated: string;
   status: string;
+  terminal: string;
 };
 
 function cleanText(value: string) {
@@ -42,6 +43,7 @@ export async function GET(request: Request) {
         airline: cells[2] ?? "",
         flight: cells[3]?.split(" ")[0] ?? "",
         from: cells[4] ?? "",
+        terminal: cells[5] ?? "",
         scheduled: cells[6] ?? "",
         estimated: cells[7] ?? "",
         status: cells[8] || "Scheduled",

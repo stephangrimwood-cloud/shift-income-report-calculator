@@ -121,6 +121,8 @@ export default function AirportArrivalsPage() {
   const router = useRouter();
     const [openDay, setOpenDay] = useState<string | null>(null);
     const [liveArrivals, setLiveArrivals] = useState<any[]>([]);
+    const [lastUpdated, setLastUpdated] = useState<string>("");
+    const [refreshError, setRefreshError] = useState(false);
     useEffect(() => {
   async function loadArrivals() {
   try {
@@ -143,6 +145,15 @@ export default function AirportArrivalsPage() {
 
     const now = Date.now();
     const fifteenMinutes = 15 * 60 * 1000;
+
+    setLastUpdated(
+      new Date().toLocaleTimeString("en-AU", {
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    );
+
+    setRefreshError(false);
 
     setLiveArrivals((previousArrivals) => {
       const freshArrivals = combinedArrivals.map((arrival: any) => {
@@ -180,8 +191,8 @@ export default function AirportArrivalsPage() {
 
       return [...freshArrivals, ...recentlyLanded];
     });
-  } catch {
-    // If the network drops, keep the previous arrivals on screen.
+    } catch {
+    setRefreshError(true);
   }
 }
 
@@ -225,6 +236,18 @@ export default function AirportArrivalsPage() {
           <p className="mt-1 text-xs text-zinc-400">
             Live arrival information updates automatically.
             </p>
+
+            {lastUpdated && (
+          <p className="mt-1 text-xs text-amber-300/80">
+            Last updated {lastUpdated}
+          </p>
+        )}
+
+{refreshError && (
+  <p className="mt-1 text-xs text-red-300/80">
+    Unable to refresh arrivals. Showing last known data.
+  </p>
+)}
         </section>
 
         <section className="space-y-3">
@@ -235,7 +258,7 @@ export default function AirportArrivalsPage() {
                 );
 
             const internationalCount = matchingArrivals.filter((arrival) =>
-                isInternationalArrival(arrival.from)
+                arrival.terminal === "T1"
                 ).length;
 
             const domesticCount = matchingArrivals.length - internationalCount;
