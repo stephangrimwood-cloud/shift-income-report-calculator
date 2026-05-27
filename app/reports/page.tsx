@@ -100,7 +100,7 @@ function getMonday(date: Date) {
 }
 
 export default function ReportsPage() {
-    const router = useRouter();
+  const router = useRouter();
   const [reports, setReports] = useState<Report[]>([]);
   const [openDate, setOpenDate] = useState<string | null>(null);
 
@@ -108,6 +108,11 @@ export default function ReportsPage() {
   onSwipedRight: () => {
     router.push("/");
   },
+
+  onSwipedLeft: () => {
+    router.push("/driver-hub");
+  },
+
   trackTouch: true,
   preventScrollOnSwipe: false,
 });
