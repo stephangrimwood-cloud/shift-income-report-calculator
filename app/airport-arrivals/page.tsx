@@ -131,8 +131,14 @@ export default function AirportArrivalsPage() {
         }
     }
 
-  loadArrivals();
-}, []);
+    loadArrivals();
+
+    const refreshTimer = setInterval(() => {
+        loadArrivals();
+    }, 60000);
+
+    return () => clearInterval(refreshTimer);
+    }, []);
 
     const swipeHandlers = useSwipeable({
     onSwipedRight: () => {
