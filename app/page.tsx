@@ -109,9 +109,9 @@ export default function Home() {
   }
 
 const swipeHandlers = useSwipeable({
-  onSwipedRight: () => {
-    router.push("/reports");
-  },
+  onSwipedLeft: () => {
+  router.push("/reports");
+},
 
   delta: 50,
   swipeDuration: 500,
