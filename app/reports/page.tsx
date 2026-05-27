@@ -116,7 +116,7 @@ export default function ReportsPage() {
   delta: 50,
   swipeDuration: 500,
   trackTouch: true,
-  trackMouse: false,
+  trackMouse: true,
   preventScrollOnSwipe: false,
 });
 

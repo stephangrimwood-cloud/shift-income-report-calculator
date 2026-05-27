@@ -116,7 +116,7 @@ const swipeHandlers = useSwipeable({
   delta: 50,
   swipeDuration: 500,
   trackTouch: true,
-  trackMouse: false,
+  trackMouse: true,
   preventScrollOnSwipe: false,
 });
 
