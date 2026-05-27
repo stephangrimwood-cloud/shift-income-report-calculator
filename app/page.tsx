@@ -203,7 +203,7 @@ const swipeHandlers = useSwipeable({
           <Result label="Shift Total" value={shiftTotal} />
           <div>
             <Result label="Owner 50%" value={displayOwnerAmount} />
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-300">
               + $5.50 shift levy included
             </p>
           </div>
