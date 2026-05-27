@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
 
@@ -16,6 +16,7 @@ type Arrival = {
 type ArrivalDay = {
   day: string;
   date: string;
+  airportDate: string;
   international: number;
   domestic: number;
   peakWindows: string[];
@@ -27,6 +28,47 @@ function formatDate(date: Date) {
     day: "numeric",
     month: "short",
   });
+}
+
+function formatAirportDate(date: Date) {
+  return date.toLocaleDateString("en-AU", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+}
+
+function isInternationalArrival(from: string) {
+  const internationalPorts = [
+    "Singapore",
+    "Denpasar Bali",
+    "Bali",
+    "Tokyo",
+    "Osaka",
+    "Auckland",
+    "Christchurch",
+    "Port Moresby",
+  ];
+
+  return internationalPorts.some((port) =>
+    from.toLowerCase().includes(port.toLowerCase())
+  );
+}
+
+function getPeakWindows(arrivals: any[]) {
+  const hourCounts: Record<string, number> = {};
+
+  arrivals.forEach((arrival) => {
+    const time = arrival.estimated || arrival.scheduled;
+    const hour = time?.split(":")[0];
+
+    if (!hour) return;
+
+    hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+  });
+
+  return Object.entries(hourCounts)
+    .filter(([, count]) => count >= 3)
+    .map(([hour]) => `${hour}:00–${hour}:59`);
 }
 
 function getStartOfWeek(date: Date) {
@@ -57,6 +99,7 @@ const arrivalWeek: ArrivalDay[] = [
   return {
     day,
     date: formatDate(date),
+    airportDate: formatAirportDate(date),
     international: 0,
     domestic: 0,
     peakWindows: [],
@@ -67,6 +110,19 @@ const arrivalWeek: ArrivalDay[] = [
 export default function AirportArrivalsPage() {
   const router = useRouter();
     const [openDay, setOpenDay] = useState<string | null>(null);
+    const [liveArrivals, setLiveArrivals] = useState<any[]>([]);
+    useEffect(() => {
+    async function loadArrivals() {
+        const response = await fetch("/api/airport-arrivals");
+        const data = await response.json();
+
+        if (data.ok) {
+        setLiveArrivals(data.arrivals);
+        }
+    }
+
+  loadArrivals();
+}, []);
 
     const swipeHandlers = useSwipeable({
     onSwipedRight: () => {
@@ -100,6 +156,17 @@ export default function AirportArrivalsPage() {
         <section className="space-y-3">
           {arrivalWeek.map((day) => {
             const isOpen = openDay === day.day;
+            const matchingArrivals = liveArrivals.filter(
+                (arrival) => arrival.date === day.airportDate
+                );
+
+            const internationalCount = matchingArrivals.filter((arrival) =>
+                isInternationalArrival(arrival.from)
+                ).length;
+
+            const domesticCount = matchingArrivals.length - internationalCount;
+
+            const peakWindows = getPeakWindows(matchingArrivals);
 
             return (
               <div
@@ -117,54 +184,55 @@ export default function AirportArrivalsPage() {
                       </div>
 
                       <div className="mt-1 text-sm text-zinc-300">
-                        Intl: {day.international} | Domestic: {day.domestic}
+                        Intl: {internationalCount} | Domestic: {domesticCount}
                       </div>
                     </div>
 
                     <div className="text-right text-sm text-zinc-300">
                       <div>Peak</div>
                       <div className="text-zinc-100">
-                        {day.peakWindows.join(", ")}
+                        {peakWindows.length > 0 ? peakWindows.join(", ") : "No peak window"}
                       </div>
                     </div>
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="mt-4 space-y-3">
-                    {day.arrivals.length === 0 ? (
-                      <div className="rounded-xl border border-[#4a4a4b] bg-[#2f2f30] p-3 text-sm text-zinc-300">
-                        No detailed arrivals added yet.
-                      </div>
+                <div className="mt-4 space-y-3">
+                    {matchingArrivals.length === 0 ? (
+                    <div className="rounded-xl border border-[#4a4a4b] bg-[#2f2f30] p-3 text-sm text-zinc-300">
+                        No arrivals listed for this day.
+                    </div>
                     ) : (
-                      day.arrivals.map((arrival) => (
-                        <div
-                          key={arrival.flight}
-                          className="rounded-xl border border-[#4a4a4b] bg-[#2f2f30] p-3"
-                        >
-                          <div className="flex justify-between gap-4">
-                            <div className="font-semibold text-white">
-                              {arrival.flight} - {arrival.airline}
+                        matchingArrivals.map((arrival) => (
+                            <div
+                            key={`${arrival.flight}-${arrival.scheduled}`}
+                            className="rounded-xl border border-[#4a4a4b] bg-[#2f2f30] p-3"
+                            >
+                            <div className="flex justify-between gap-4">
+                                <div className="font-semibold text-white">
+                                {arrival.flight} - {arrival.airline}
+                                </div>
+
+                                <div className="text-right text-sm text-zinc-300">
+                                {arrival.from}
+                                </div>
                             </div>
 
-                            <div className="text-right text-sm text-zinc-300">
-                              {arrival.from}
-                            </div>
-                          </div>
+                            <div className="mt-2 flex justify-between gap-4 text-sm">
+                                <div className="text-zinc-300">
+                                {arrival.scheduled} →{" "}
+                                {arrival.estimated || arrival.scheduled}
+                                </div>
 
-                          <div className="mt-2 flex justify-between gap-4 text-sm">
-                            <div className="text-zinc-300">
-                              {arrival.scheduled} → {arrival.estimated}
+                                <div className="font-medium text-zinc-100">
+                                {arrival.status}
+                                </div>
                             </div>
-
-                            <div className="font-medium text-zinc-100">
-                              {arrival.status}
                             </div>
-                          </div>
-                        </div>
-                      ))
+                        ))
                     )}
-                  </div>
+                </div>
                 )}
               </div>
             );
