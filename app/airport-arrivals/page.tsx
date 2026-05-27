@@ -86,12 +86,6 @@ export default function AirportArrivalsPage() {
     {...swipeHandlers}
     className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
       <div className="mx-auto max-w-md space-y-5">
-        <button
-          onClick={() => router.push("/driver-hub")}
-          className="rounded-xl border border-[#7b7b7c] bg-[#2f2f30] px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:bg-[#3a3a3b]"
-        >
-          ← Driver Hub
-        </button>
 
         <section className="rounded-2xl border border-[#4a4a4b] bg-[#3a3a3b] p-4 shadow-lg">
           <h1 className="text-2xl font-semibold text-white">
