@@ -1,12 +1,24 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSwipeable } from "react-swipeable";
 
 export default function DriverHubPage() {
   const router = useRouter();
+  const swipeHandlers = useSwipeable({
+        onSwipedRight: () => {
+            router.push("/reports");
+        },
+
+        trackTouch: true,
+        preventScrollOnSwipe: false,
+        });
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100">
+    <main
+        {...swipeHandlers}
+        className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100"
+        >
       <div className="mx-auto max-w-md space-y-4">
         <button
           onClick={() => router.push("/reports")}
