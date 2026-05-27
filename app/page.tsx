@@ -150,7 +150,7 @@ const swipeHandlers = useSwipeable({
               type="date"
               value={shiftDate}
               onChange={(e) => setShiftDate(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] px-4 py-3 text-lg text-zinc-100 outline-none focus:border-[#b8b8ba]"
+              className="mt-1 w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] pl-3 pr-4 py-3 text-lg text-zinc-100 outline-none focus:border-[#b8b8ba]"
             />
           </label>
           
