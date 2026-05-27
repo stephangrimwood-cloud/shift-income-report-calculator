@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSwipeable } from "react-swipeable";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
@@ -120,6 +120,10 @@ const swipeHandlers = useSwipeable({
   preventScrollOnSwipe: false,
 });
 
+  useEffect(() => {
+    document.documentElement.style.colorScheme = "dark";
+  }, []);
+
   return (
     <main
   {...swipeHandlers}
@@ -146,7 +150,7 @@ const swipeHandlers = useSwipeable({
               type="date"
               value={shiftDate}
               onChange={(e) => setShiftDate(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] px-4 py-3 text-lg text-zinc-100 outline-none color-scheme-dark focus:border-[#b8b8ba]"
+              className="mt-1 w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] px-4 py-3 text-lg text-zinc-100 outline-none focus:border-[#b8b8ba]"
             />
           </label>
           
