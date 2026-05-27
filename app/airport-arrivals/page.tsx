@@ -122,23 +122,77 @@ export default function AirportArrivalsPage() {
     const [openDay, setOpenDay] = useState<string | null>(null);
     const [liveArrivals, setLiveArrivals] = useState<any[]>([]);
     useEffect(() => {
-    async function loadArrivals() {
-        const response = await fetch("/api/airport-arrivals");
-        const data = await response.json();
+  async function loadArrivals() {
+  try {
+    const todayResponse = await fetch("/api/airport-arrivals?day=today");
+    const todayData = await todayResponse.json();
 
-        if (data.ok) {
-        setLiveArrivals(data.arrivals);
-        }
+    let tomorrowData = { ok: false, arrivals: [] };
+
+    try {
+      const tomorrowResponse = await fetch("/api/airport-arrivals?day=tomorrow");
+      tomorrowData = await tomorrowResponse.json();
+    } catch {
+      tomorrowData = { ok: false, arrivals: [] };
     }
 
+    const combinedArrivals = [
+      ...(todayData.ok ? todayData.arrivals : []),
+      ...(tomorrowData.ok ? tomorrowData.arrivals : []),
+    ];
+
+    const now = Date.now();
+    const fifteenMinutes = 15 * 60 * 1000;
+
+    setLiveArrivals((previousArrivals) => {
+      const freshArrivals = combinedArrivals.map((arrival: any) => {
+        const previousMatch = previousArrivals.find(
+          (previous: any) =>
+            previous.flight === arrival.flight &&
+            previous.date === arrival.date
+        );
+
+        return {
+          ...arrival,
+          landedAt:
+            arrival.status === "Landed"
+              ? previousMatch?.landedAt ?? now
+              : undefined,
+        };
+      });
+
+      const freshKeys = new Set(
+        freshArrivals.map(
+          (arrival: any) => `${arrival.date}-${arrival.flight}`
+        )
+      );
+
+      const recentlyLanded = previousArrivals.filter((arrival: any) => {
+        const key = `${arrival.date}-${arrival.flight}`;
+
+        return (
+          arrival.status === "Landed" &&
+          arrival.landedAt &&
+          now - arrival.landedAt < fifteenMinutes &&
+          !freshKeys.has(key)
+        );
+      });
+
+      return [...freshArrivals, ...recentlyLanded];
+    });
+  } catch {
+    // If the network drops, keep the previous arrivals on screen.
+  }
+}
+
+  loadArrivals();
+
+  const refreshTimer = setInterval(() => {
     loadArrivals();
+  }, 60000);
 
-    const refreshTimer = setInterval(() => {
-        loadArrivals();
-    }, 60000);
-
-    return () => clearInterval(refreshTimer);
-    }, []);
+  return () => clearInterval(refreshTimer);
+}, []);
 
     const swipeHandlers = useSwipeable({
     onSwipedRight: () => {
@@ -167,6 +221,10 @@ export default function AirportArrivalsPage() {
           <p className="mt-2 text-sm text-zinc-300">
             Weekly inbound flight activity and peak arrival windows.
           </p>
+
+          <p className="mt-1 text-xs text-zinc-400">
+            Live arrival information updates automatically.
+            </p>
         </section>
 
         <section className="space-y-3">
@@ -233,13 +291,18 @@ export default function AirportArrivalsPage() {
                 <div className="mt-4 space-y-3">
                     {matchingArrivals.length === 0 ? (
                     <div className="rounded-xl border border-[#4a4a4b] bg-[#2f2f30] p-3 text-sm text-zinc-300">
-                        No arrivals listed for this day.
+                        No arrival data published for this day yet.
+                        Check again later.
                     </div>
                     ) : (
                         matchingArrivals.map((arrival) => (
                             <div
-                            key={`${arrival.flight}-${arrival.scheduled}`}
-                            className="rounded-xl border border-[#4a4a4b] bg-[#2f2f30] p-3"
+                            key={`${arrival.date}-${arrival.flight}-${arrival.scheduled}`}
+                            className={`rounded-xl border p-3 ${
+                                isInternationalArrival(arrival.from)
+                                    ? "border-sky-400/30 bg-sky-500/10"
+                                    : "border-[#4a4a4b] bg-[#2f2f30]"
+                                }`}
                             >
                             <div className="flex justify-between gap-4">
                                 <div className="font-semibold text-white">

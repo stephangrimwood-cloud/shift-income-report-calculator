@@ -14,10 +14,15 @@ function cleanText(value: string) {
   return value.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+
+    const day = searchParams.get("day") || "today";
   try {
     const response = await fetch(
-      "https://www.cairnsairport.com.au/travelling/flight-info/arrivals/",
+      day === "tomorrow"
+        ? "https://www.cairnsairport.com.au/travelling/flight-info/arrivals?date=tomorrow"
+        : "https://www.cairnsairport.com.au/travelling/flight-info/arrivals/",
       {
         cache: "no-store",
       }
