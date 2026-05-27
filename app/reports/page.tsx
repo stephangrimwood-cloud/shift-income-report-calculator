@@ -113,7 +113,10 @@ export default function ReportsPage() {
     router.push("/driver-hub");
   },
 
+  delta: 50,
+  swipeDuration: 500,
   trackTouch: true,
+  trackMouse: false,
   preventScrollOnSwipe: false,
 });
 
@@ -184,16 +187,7 @@ export default function ReportsPage() {
   {...swipeHandlers}
   className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
       <div className="mx-auto max-w-md space-y-5">
-        <div className="flex gap-3">
-          <Link
-            href="/"
-            className="rounded-xl border border-[#7b7b7c] bg-[#2f2f30] px-4 py-2 text-sm font-semibold text-zinc-200 transition hover:bg-[#3a3a3b]"
-          >
-            ← Calculator
-          </Link>
-        </div>
-
-        <section className="rounded-2xl bg-[#3a3a3b] p-4">
+      <section className="rounded-2xl bg-[#3a3a3b] p-4">
           <h1 className="text-3xl font-bold">Weekly Reports</h1>
 
           <p className="mt-2 text-sm text-zinc-400">

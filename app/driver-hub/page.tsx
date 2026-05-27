@@ -8,12 +8,15 @@ export default function DriverHubPage() {
 
   const swipeHandlers = useSwipeable({
     onSwipedRight: () => {
-      router.push("/reports");
+        router.push("/reports");
     },
 
+    delta: 50,
+    swipeDuration: 500,
     trackTouch: true,
+    trackMouse: false,
     preventScrollOnSwipe: false,
-  });
+    });
 
   return (
     <main
@@ -21,12 +24,6 @@ export default function DriverHubPage() {
       className="min-h-screen bg-[#2f2f30] px-4 py-6 text-zinc-100"
     >
       <div className="mx-auto max-w-md space-y-4">
-        <button
-          onClick={() => router.push("/reports")}
-          className="text-sm text-zinc-300 hover:text-white"
-        >
-          ← Back to Reports
-        </button>
 
         <section className="rounded-2xl border border-[#4a4a4b] bg-[#3a3a3b] p-4 shadow-lg">
           <h1 className="text-2xl font-semibold text-white">

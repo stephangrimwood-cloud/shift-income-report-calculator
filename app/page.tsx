@@ -108,12 +108,15 @@ export default function Home() {
   setEftpos("0.00");
   }
 
-  const swipeHandlers = useSwipeable({
-  onSwipedLeft: () => {
+const swipeHandlers = useSwipeable({
+  onSwipedRight: () => {
     router.push("/reports");
   },
 
+  delta: 50,
+  swipeDuration: 500,
   trackTouch: true,
+  trackMouse: false,
   preventScrollOnSwipe: false,
 });
 
