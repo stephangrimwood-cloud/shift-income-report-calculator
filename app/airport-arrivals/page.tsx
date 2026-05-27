@@ -322,7 +322,7 @@ export default function AirportArrivalsPage() {
                             <div
                             key={`${arrival.date}-${arrival.flight}-${arrival.scheduled}`}
                             className={`rounded-xl border p-3 ${
-                                isInternationalArrival(arrival.from)
+                                arrival.terminal === "T1"
                                     ? "border-sky-400/30 bg-sky-500/10"
                                     : "border-[#4a4a4b] bg-[#2f2f30]"
                                 }`}
