@@ -116,13 +116,13 @@ export default function Home() {
         className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
             <div className="mx-auto max-w-md space-y-5">
                 <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                        <h1 className="text-4xl font-black tracking-tight text-zinc-100">
-                        Driver Companion
+                    <div>
+                        <h1 className="text-2xl font-semibold text-white">
+                            Shift Income Report Calculator
                         </h1>
 
-                        <p className="text-sm font-medium tracking-[0.15em] text-zinc-400 uppercase">
-                        Shift Income Report Calculator
+                        <p className="mt-2 text-sm text-zinc-300">
+                            Calculate earnings and shift settlement totals.
                         </p>
                     </div>
 
