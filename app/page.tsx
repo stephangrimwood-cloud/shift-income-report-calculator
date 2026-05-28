@@ -6,7 +6,7 @@ import SplashScreen from "./components/SplashScreen";
 
 export default function DriverHubPage() {
 
-const [showSplash, setShowSplash] = useState(false);
+const [showSplash, setShowSplash] = useState<boolean | null>(null);
 
 useEffect(() => {
   const hasSeenSplash = sessionStorage.getItem("driver-companion-splash-seen");
@@ -21,11 +21,19 @@ useEffect(() => {
 
     return () => clearTimeout(timer);
   }
+
+  setShowSplash(false);
 }, []);
 
-    if (showSplash) {
-      return <SplashScreen />;
-    }
+    if (showSplash === null) {
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425]" />
+  );
+}
+
+if (showSplash) {
+  return <SplashScreen />;
+}
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
