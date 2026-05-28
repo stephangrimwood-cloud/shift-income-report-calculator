@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSwipeable } from "react-swipeable";
 
 type Arrival = {
   flight: string;
@@ -207,22 +206,9 @@ export default function AirportArrivalsPage() {
   return () => clearInterval(refreshTimer);
 }, []);
 
-    const swipeHandlers = useSwipeable({
-    onSwipedRight: () => {
-        router.push("/driver-hub");
-    },
-
-    delta: 50,
-    swipeDuration: 500,
-    trackTouch: true,
-    trackMouse: true,
-    preventScrollOnSwipe: false,
-    });
-
   return (
 
     <main 
-    {...swipeHandlers}
     className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
       <div className="mx-auto max-w-md space-y-5">
 
