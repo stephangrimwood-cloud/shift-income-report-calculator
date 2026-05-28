@@ -112,11 +112,13 @@ export default function Home() {
   }, []);
 
   return (
+
     <main
         className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
             <div className="mx-auto max-w-md space-y-5">
-                <div className="flex items-start justify-between gap-3">
-                    <div>
+                <section className="rounded-2xl border border-[#4a4a4b] bg-[#3a3a3b] p-4 shadow-lg">
+                    <div className="flex items-start justify-between gap-3">
+                        <div>
                         <h1 className="text-2xl font-semibold text-white">
                             Shift Income Report Calculator
                         </h1>
@@ -124,15 +126,17 @@ export default function Home() {
                         <p className="mt-2 text-sm text-zinc-300">
                             Calculate earnings and shift settlement totals.
                         </p>
-                    </div>
+                        </div>
 
-                    <Link
+                        <Link
                         href="/"
                         className="shrink-0 rounded-xl border border-amber-500/40 bg-gradient-to-b from-[#4a4030] to-[#2d2924] px-4 py-2 text-sm font-semibold text-amber-100 shadow-[0_0_0_1px_rgba(245,158,11,0.08),0_4px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-amber-400/60 hover:from-[#5a4a34] hover:to-[#35302a] hover:text-white"
-                    >
+                        >
                         Home
-                    </Link>
+                        </Link>
                     </div>
+                </section>
+                    
 
                 <section className="space-y-3 rounded-2xl bg-[#3a3a3b] p-4">
 
