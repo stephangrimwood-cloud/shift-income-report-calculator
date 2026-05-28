@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useSwipeable } from "react-swipeable";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -108,171 +107,158 @@ export default function Home() {
   setEftpos("0.00");
   }
 
-const swipeHandlers = useSwipeable({
-  onSwipedLeft: () => {
-  router.push("/reports");
-},
-
-  delta: 50,
-  swipeDuration: 500,
-  trackTouch: true,
-  trackMouse: true,
-  preventScrollOnSwipe: false,
-});
-
   useEffect(() => {
     document.documentElement.style.colorScheme = "dark";
   }, []);
 
   return (
     <main
-  {...swipeHandlers}
-  className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
-      <div className="mx-auto max-w-md space-y-5">
-        <div className="flex items-start justify-between gap-3">
-            <div className="space-y-1">
-                <h1 className="text-4xl font-black tracking-tight text-zinc-100">
-                Driver Companion
-                </h1>
+        className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
+            <div className="mx-auto max-w-md space-y-5">
+                <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                        <h1 className="text-4xl font-black tracking-tight text-zinc-100">
+                        Driver Companion
+                        </h1>
 
-                <p className="text-sm font-medium tracking-[0.15em] text-zinc-400 uppercase">
-                Shift Income Report Calculator
-                </p>
-            </div>
+                        <p className="text-sm font-medium tracking-[0.15em] text-zinc-400 uppercase">
+                        Shift Income Report Calculator
+                        </p>
+                    </div>
 
-            <Link
-                href="/"
-                className="shrink-0 rounded-xl border border-amber-500/40 bg-gradient-to-b from-[#4a4030] to-[#2d2924] px-4 py-2 text-sm font-semibold text-amber-100 shadow-[0_0_0_1px_rgba(245,158,11,0.08),0_4px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-amber-400/60 hover:from-[#5a4a34] hover:to-[#35302a] hover:text-white"
-            >
-                Home
-            </Link>
-            </div>
+                    <Link
+                        href="/"
+                        className="shrink-0 rounded-xl border border-amber-500/40 bg-gradient-to-b from-[#4a4030] to-[#2d2924] px-4 py-2 text-sm font-semibold text-amber-100 shadow-[0_0_0_1px_rgba(245,158,11,0.08),0_4px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-amber-400/60 hover:from-[#5a4a34] hover:to-[#35302a] hover:text-white"
+                    >
+                        Home
+                    </Link>
+                    </div>
 
-        <section className="space-y-3 rounded-2xl bg-[#3a3a3b] p-4">
+                <section className="space-y-3 rounded-2xl bg-[#3a3a3b] p-4">
 
-          <label className="block">
-            <span className="text-sm text-zinc-300">
-              Shift Start Date
-            </span>
+                <label className="block">
+                    <span className="text-sm text-zinc-300">
+                    Shift Start Date
+                    </span>
 
-            <input
-              type="date"
-              value={shiftDate}
-              onChange={(e) => setShiftDate(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] pl-3 pr-4 py-3 text-lg text-zinc-100 outline-none focus:border-[#b8b8ba]"
-            />
-          </label>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-zinc-300">
-                Shift Start
-              </label>
-
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="HH:MM"
-                value={shiftStart}
-                onChange={(e) => setShiftStart(formatShiftTime(e.target.value))}
-                className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-zinc-300">
-                Shift End
-              </label>
-
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="HH:MM"
-                value={shiftEnd}
-                onChange={(e) => setShiftEnd(formatShiftTime(e.target.value))}
-                className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
-              />
-            </div>
-          </div>
-
-          <MoneyInput label="Meter Total" value={meterTotal} setValue={setMeterTotal} />
-          <MoneyInput label="Less Tolls" value={tolls} setValue={setTolls} />
-          <MoneyInput label="Plus Quotes" value={quotes} setValue={setQuotes} />
-          <MoneyInput
-                      label="Less Evasions or Meter Errors"
-                      value={emes}
-                      setValue={setEmes}
+                    <input
+                    type="date"
+                    value={shiftDate}
+                    onChange={(e) => setShiftDate(e.target.value)}
+                    className="mt-1 w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] pl-3 pr-4 py-3 text-lg text-zinc-100 outline-none focus:border-[#b8b8ba]"
                     />
-          <MoneyInput label="Less Owner Dockets" value={dockets} setValue={setDockets} />
-          <MoneyInput label="Less Fuel Cash (if any)" value={fuel} setValue={setFuel} />
-          <MoneyInput label="Less EFTPOS" value={eftpos} setValue={setEftpos} />
-        </section>
+                </label>
+                
+                <div className="grid grid-cols-2 gap-3">
+                    <div>
+                    <label className="mb-1 block text-sm font-medium text-zinc-300">
+                        Shift Start
+                    </label>
 
-        <section className="space-y-3 rounded-2xl bg-[#3a3a3b] p-4">
-          <Result label="Shift Total" value={shiftTotal} />
-          <div>
-            <Result label="Owner 50%" value={displayOwnerAmount} />
-            <p className="text-xs text-zinc-300">
-              + $5.50 shift levy included
-            </p>
-          </div>
-            <Result
-              label="Driver Share"
-              value={displayDriverShare}
-            />
+                    <input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="HH:MM"
+                        value={shiftStart}
+                        onChange={(e) => setShiftStart(formatShiftTime(e.target.value))}
+                        className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
+                    />
+                    </div>
 
-          <div
-              className={`rounded-2xl border p-5 text-center ${
-                displayPayable >= 0
-                  ? "border-red-400/50 bg-red-500/10"
-                  : "border-emerald-400/50 bg-emerald-500/10"
-              }`}
-            >
+                    <div>
+                    <label className="mb-1 block text-sm font-medium text-zinc-300">
+                        Shift End
+                    </label>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-300">
-              {displayPayable >= 0
-                ? "Pay Into Envelope"
-                : "Payable to Driver"}
-            </p>
+                    <input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="HH:MM"
+                        value={shiftEnd}
+                        onChange={(e) => setShiftEnd(formatShiftTime(e.target.value))}
+                        className="w-full rounded-xl border border-[#4a4a4b] bg-[#242425] px-4 py-3 text-zinc-100 outline-none transition focus:border-amber-400"
+                    />
+                    </div>
+                </div>
 
-            <p className="mt-3 text-5xl font-black tracking-tight">
-              {displayPayable >= 0 ? "+" : "-"}$
-              {Math.abs(displayPayable).toFixed(2)}
-            </p>
+                <MoneyInput label="Meter Total" value={meterTotal} setValue={setMeterTotal} />
+                <MoneyInput label="Less Tolls" value={tolls} setValue={setTolls} />
+                <MoneyInput label="Plus Quotes" value={quotes} setValue={setQuotes} />
+                <MoneyInput
+                            label="Less Evasions or Meter Errors"
+                            value={emes}
+                            setValue={setEmes}
+                            />
+                <MoneyInput label="Less Owner Dockets" value={dockets} setValue={setDockets} />
+                <MoneyInput label="Less Fuel Cash (if any)" value={fuel} setValue={setFuel} />
+                <MoneyInput label="Less EFTPOS" value={eftpos} setValue={setEftpos} />
+                </section>
 
-          {saveMessage && (
-            <p className="mt-4 text-sm text-emerald-300">
-              {saveMessage}
-            </p>
-          )}
+                <section className="space-y-3 rounded-2xl bg-[#3a3a3b] p-4">
+                <Result label="Shift Total" value={shiftTotal} />
+                <div>
+                    <Result label="Owner 50%" value={displayOwnerAmount} />
+                    <p className="text-xs text-zinc-300">
+                    + $5.50 shift levy included
+                    </p>
+                </div>
+                    <Result
+                    label="Driver Share"
+                    value={displayDriverShare}
+                    />
 
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <button
-              onClick={saveReport}
-              className="w-full rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-5 py-2 text-center text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/20"
-            >
-              Save Report
-            </button>
+                <div
+                    className={`rounded-2xl border p-5 text-center ${
+                        displayPayable >= 0
+                        ? "border-red-400/50 bg-red-500/10"
+                        : "border-emerald-400/50 bg-emerald-500/10"
+                    }`}
+                    >
 
-            <Link
-              href="/reports"
-              className="w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] px-5 py-2 text-center text-sm font-semibold text-zinc-200 transition hover:bg-[#3a3a3b]"
-            >
-              Reports
-            </Link>
-          </div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-300">
+                    {displayPayable >= 0
+                        ? "Pay Into Envelope"
+                        : "Payable to Driver"}
+                    </p>
 
-          </div>
-        </section>
+                    <p className="mt-3 text-5xl font-black tracking-tight">
+                    {displayPayable >= 0 ? "+" : "-"}$
+                    {Math.abs(displayPayable).toFixed(2)}
+                    </p>
 
-        <footer className="pb-4 pt-2 text-center text-xs text-zinc-400">
-          Stephan Grimwood • Version 1.2 • May 2026
-        </footer>
+                {saveMessage && (
+                    <p className="mt-4 text-sm text-emerald-300">
+                    {saveMessage}
+                    </p>
+                )}
 
-      </div>
-    </main>
-  );
-}
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                    <button
+                    onClick={saveReport}
+                    className="w-full rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-5 py-2 text-center text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/20"
+                    >
+                    Save Report
+                    </button>
+
+                    <Link
+                    href="/reports"
+                    className="w-full rounded-xl border border-[#7b7b7c] bg-[#2f2f30] px-5 py-2 text-center text-sm font-semibold text-zinc-200 transition hover:bg-[#3a3a3b]"
+                    >
+                    Reports
+                    </Link>
+                </div>
+
+                </div>
+                </section>
+
+                <footer className="pb-4 pt-2 text-center text-xs text-zinc-400">
+                Stephan Grimwood • Version 1.2 • May 2026
+                </footer>
+
+            </div>
+            </main>
+        );
+        }
 
 function formatShiftTime(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 4);
