@@ -251,9 +251,6 @@ export default function Home() {
                 </div>
                 </section>
 
-                <footer className="pb-4 pt-2 text-center text-xs text-zinc-400">
-                Stephan Grimwood • Version 1.2 • May 2026
-                </footer>
 
             </div>
             </main>
