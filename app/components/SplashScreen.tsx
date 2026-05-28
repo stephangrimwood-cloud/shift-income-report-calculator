@@ -26,39 +26,43 @@ export default function SplashScreen() {
       </h1>
 
         {/* Logo Wrapper */}
-        <div className="relative z-10 w-40 h-40">
+        <div className="relative w-40 h-40">
+
+        {/* Taxi Sign Glow Overlay BEHIND Logo */}
+        <motion.img
+            src="/taxi-sign-glow.png"
+            alt=""
+            className="absolute inset-0 z-0 w-40 h-40 object-contain pointer-events-none"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: [1, 1, 0, 0] }}
+            transition={{
+            duration: 3.6,
+            ease: "easeOut",
+            times: [0, 0.84, 0.97, 1],
+            }}
+        />
+
+        {/* Main Logo */}
         <img
             src="/icon-512.png"
             alt="Driver Companion Logo"
-            className="relative z-10 w-40 h-40 object-contain"
+            className="relative z-20 w-40 h-40 object-contain"
         />
 
         {/* Headlight Flash Overlay */}
         <motion.img
-        src="/headlight-flash.png"
-        alt=""
-        className="absolute inset-0 z-20 w-40 h-40 object-contain pointer-events-none"
-        style={{
-            filter: "brightness(3.5) drop-shadow(0 0 18px white)"
+            src="/headlight-flash.png"
+            alt=""
+            className="absolute inset-0 z-30 w-40 h-40 object-contain pointer-events-none"
+            style={{
+            filter: "brightness(3.5) drop-shadow(0 0 18px white)",
             }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 5, 0, 0, 2.5, 0] }}
-        transition={{
-            duration: 1.6,
-            ease: "easeOut",
-            times: [0, 0.18, 0.38, 0.58, 0.78, 1],
-        }}
-        />
-
-        {/* Taxi Sign Glow Overlay */}
-        <motion.div
-            className="absolute left-1/2 top-[19%] h-5 w-14 -translate-x-1/2 rounded-md bg-amber-300/60 blur-md"
-            initial={{ opacity: 0.15 }}
-            animate={{ opacity: [0.15, 0.8, 0.25, 0.65, 0.2] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 5, 0, 0, 1.8, 0] }}
             transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
+            duration: 2.6,
+            ease: "easeOut",
+            times: [0, 0.10, 0.20, 0.48, 0.62, 1],
             }}
         />
         </div>
