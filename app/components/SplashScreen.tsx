@@ -20,7 +20,7 @@ export default function SplashScreen() {
 
       {/* App Title */}
       <h1
-        className="mb-4 text-4xl font-semibold tracking-[0.22em] text-amber-400 uppercase"
+        className="mb-4 translate-x-[2px] text-4xl font-semibold tracking-[0.22em] text-amber-400 uppercase"
       >
         Driver
       </h1>
@@ -65,7 +65,7 @@ export default function SplashScreen() {
 
       {/* Subtitle */}
       <h2
-        className="mt-4 text-xl tracking-[0.28em] text-white/80 uppercase"
+        className="mt-4 translate-x-[2px] text-xl tracking-[0.28em] text-white/80 uppercase"
       >
         Companion
       </h2>
