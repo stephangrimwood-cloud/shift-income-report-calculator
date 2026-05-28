@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
@@ -225,13 +227,24 @@ export default function AirportArrivalsPage() {
       <div className="mx-auto max-w-md space-y-5">
 
         <section className="rounded-2xl border border-[#4a4a4b] bg-[#3a3a3b] p-4 shadow-lg">
-          <h1 className="text-2xl font-semibold text-white">
-            Airport Arrivals
-          </h1>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-semibold text-white">
+                Airport Arrivals
+              </h1>
 
-          <p className="mt-2 text-sm text-zinc-300">
-            Weekly inbound flight activity and peak arrival windows.
-          </p>
+              <p className="mt-2 text-sm text-zinc-300">
+                Weekly inbound flight activity and peak arrival windows.
+              </p>
+            </div>
+
+            <Link
+              href="/"
+              className="shrink-0 rounded-xl border border-amber-500/40 bg-gradient-to-b from-[#4a4030] to-[#2d2924] px-4 py-2 text-sm font-semibold text-amber-100 shadow-[0_0_0_1px_rgba(245,158,11,0.08),0_4px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-amber-400/60 hover:from-[#5a4a34] hover:to-[#35302a] hover:text-white"
+            >
+              Home
+            </Link>
+          </div>
 
           <p className="mt-1 text-xs text-zinc-400">
             Live arrival information updates automatically.
@@ -243,11 +256,11 @@ export default function AirportArrivalsPage() {
           </p>
         )}
 
-{refreshError && (
-  <p className="mt-1 text-xs text-red-300/80">
-    Unable to refresh arrivals. Showing last known data.
-  </p>
-)}
+          {refreshError && (
+            <p className="mt-1 text-xs text-red-300/80">
+              Unable to refresh arrivals. Showing last known data.
+            </p>
+          )}
         </section>
 
         <section className="space-y-3">

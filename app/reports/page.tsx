@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useSwipeable } from "react-swipeable";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import SplashScreen from "@/app/components/SplashScreen";
 
 type Report = {
   id: string;
@@ -102,7 +101,6 @@ function getMonday(date: Date) {
 
 export default function ReportsPage() {
   const router = useRouter();
-  const [showSplash, setShowSplash] = useState(true);
   const [reports, setReports] = useState<Report[]>([]);
   const [openDate, setOpenDate] = useState<string | null>(null);
 
@@ -135,14 +133,6 @@ export default function ReportsPage() {
       isoDate,
     };
   });
-
-  //useEffect(() => {
-  //const timer = setTimeout(() => {
-   // setShowSplash(false);
-  //}, 3000);
-
-  //return () => clearTimeout(timer);
-//}, []);
 
   useEffect(() => {
     const savedReports = JSON.parse(
@@ -192,25 +182,30 @@ export default function ReportsPage() {
 
 }
 
-  if (showSplash) {
-    return <SplashScreen />;
-  }
-
-  return <SplashScreen />;
-
   return (
     <main
   {...swipeHandlers}
   className="min-h-screen bg-gradient-to-b from-[#2f2f30] via-[#2b2b2c] to-[#242425] p-5 text-zinc-100">
       <div className="mx-auto max-w-md space-y-5">
       <section className="rounded-2xl bg-[#3a3a3b] p-4">
-          <h1 className="text-3xl font-bold">Weekly Reports</h1>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-3xl font-bold text-zinc-100">Weekly Reports</h1>
 
-          <p className="mt-2 text-sm text-zinc-400">
-            Week: {formatDate(weekDates[0].date)} -{" "}
-            {formatDate(weekDates[6].date)}
-          </p>
-        </section>
+            <p className="mt-2 text-sm text-zinc-400">
+              Week: {formatDate(weekDates[0].date)} -{" "}
+              {formatDate(weekDates[6].date)}
+            </p>
+          </div>
+
+          <Link
+            href="/"
+            className="shrink-0 rounded-xl border border-amber-500/40 bg-gradient-to-b from-[#4a4030] to-[#2d2924] px-4 py-2 text-sm font-semibold text-amber-100 shadow-[0_0_0_1px_rgba(245,158,11,0.08),0_4px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-amber-400/60 hover:from-[#5a4a34] hover:to-[#35302a] hover:text-white"
+          >
+            Home
+          </Link>
+        </div>
+      </section>
 
         <section className="space-y-3 rounded-2xl bg-[#3a3a3b] p-4">
           {weekDates.map((weekDay) => {
