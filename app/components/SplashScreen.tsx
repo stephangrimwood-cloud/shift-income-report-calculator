@@ -8,64 +8,67 @@ export default function SplashScreen() {
       
       {/* Headlight Glow Background */}
       <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full bg-amber-500/10 blur-3xl"
+        className="absolute w-[340px] h-[340px] rounded-full bg-amber-400/16 blur-3xl"
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0.15, 0.3, 0.15] }}
+        animate={{ opacity: [0.12, 0.28, 0.12] }}
         transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* Taxi Sign Glow */}
-      <motion.div
-        className="absolute top-[28%] w-32 h-8 rounded-md bg-amber-400/20 blur-xl"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0.2, 0.7, 0.3] }}
-        transition={{
-          duration: 1.8,
+          duration: 3.2,
           repeat: Infinity,
           ease: "easeInOut",
         }}
       />
 
       {/* App Title */}
-      <motion.h1
-        className="mb-6 text-3xl font-semibold tracking-[0.3em] text-amber-400 uppercase"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+      <h1
+        className="mb-4 text-4xl font-semibold tracking-[0.22em] text-amber-400 uppercase"
       >
         Driver
-      </motion.h1>
+      </h1>
 
-      {/* Logo */}
-      <motion.img
-        src="/icon.png"
-        alt="Driver Companion Logo"
-        className="w-40 h-40 object-contain relative z-10"
-        initial={{ scale: 0.92, opacity: 0 }}
-        animate={{
-          scale: [0.98, 1.02, 0.98],
-          opacity: 1,
-        }}
+        {/* Logo Wrapper */}
+        <div className="relative z-10 w-40 h-40">
+        <img
+            src="/icon-512.png"
+            alt="Driver Companion Logo"
+            className="relative z-10 w-40 h-40 object-contain"
+        />
+
+        {/* Headlight Flash Overlay */}
+        <motion.img
+        src="/headlight-flash.png"
+        alt=""
+        className="absolute inset-0 z-20 w-40 h-40 object-contain pointer-events-none"
+        style={{
+            filter: "brightness(3.5) drop-shadow(0 0 18px white)"
+            }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 5, 0, 0, 2.5, 0] }}
         transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "easeInOut",
+            duration: 1.6,
+            ease: "easeOut",
+            times: [0, 0.18, 0.38, 0.58, 0.78, 1],
         }}
-      />
+        />
+
+        {/* Taxi Sign Glow Overlay */}
+        <motion.div
+            className="absolute left-1/2 top-[19%] h-5 w-14 -translate-x-1/2 rounded-md bg-amber-300/60 blur-md"
+            initial={{ opacity: 0.15 }}
+            animate={{ opacity: [0.15, 0.8, 0.25, 0.65, 0.2] }}
+            transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            }}
+        />
+        </div>
 
       {/* Subtitle */}
-      <motion.h2
-        className="mt-6 text-xl tracking-[0.4em] text-white/80 uppercase"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.3 }}
+      <h2
+        className="mt-4 text-xl tracking-[0.28em] text-white/80 uppercase"
       >
         Companion
-      </motion.h2>
+      </h2>
     </div>
   );
 }

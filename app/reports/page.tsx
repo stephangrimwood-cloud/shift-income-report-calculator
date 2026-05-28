@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSwipeable } from "react-swipeable";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import SplashScreen from "@/app/components/SplashScreen";
 
 type Report = {
   id: string;
@@ -101,6 +102,7 @@ function getMonday(date: Date) {
 
 export default function ReportsPage() {
   const router = useRouter();
+  const [showSplash, setShowSplash] = useState(true);
   const [reports, setReports] = useState<Report[]>([]);
   const [openDate, setOpenDate] = useState<string | null>(null);
 
@@ -133,6 +135,14 @@ export default function ReportsPage() {
       isoDate,
     };
   });
+
+  //useEffect(() => {
+  //const timer = setTimeout(() => {
+   // setShowSplash(false);
+  //}, 3000);
+
+  //return () => clearTimeout(timer);
+//}, []);
 
   useEffect(() => {
     const savedReports = JSON.parse(
@@ -181,6 +191,12 @@ export default function ReportsPage() {
   );
 
 }
+
+  if (showSplash) {
+    return <SplashScreen />;
+  }
+
+  return <SplashScreen />;
 
   return (
     <main
