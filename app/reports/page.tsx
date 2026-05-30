@@ -165,28 +165,49 @@ export default function ReportsPage() {
     return total + dayTotal;
   }, 0);
 
-  function toLocalDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const monthStart = new Date(weekStart.getFullYear(), weekStart.getMonth(), 1);
+  const monthEnd = new Date(weekStart.getFullYear(), weekStart.getMonth() + 1, 0);
 
-  return `${year}-${month}-${day}`;
-}
+  const monthReports = reports.filter((report) => {
+    const reportDateString = report.shiftDate || report.createdAt.split("T")[0];
+    const reportDate = new Date(reportDateString);
 
-  const gstEstimate = weeklyGross * 0.1;
-  const estimatedRemaining = weeklyGross - gstEstimate;
+    return reportDate >= monthStart && reportDate <= monthEnd;
+  });
 
-  function deleteReport(reportId: string) {
-  const updatedReports = reports.filter((report) => report.id !== reportId);
+  const monthlyGross = monthReports.reduce((total, report) => {
+    const driverShare =
+      report.driverShare ??
+      report.ownerHalf - (parseFloat(report.levy) || 0);
 
-  setReports(updatedReports);
+    return total + driverShare;
+  }, 0);
 
-  localStorage.setItem(
-    "driver-companion-reports",
-    JSON.stringify(updatedReports)
-  );
+  const monthlyGstEstimate = monthlyGross / 11;
+  const monthlyEstimatedRemaining = monthlyGross - monthlyGstEstimate;
 
-}
+    function toLocalDateKey(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+    const gstEstimate = weeklyGross / 11;
+    const estimatedRemaining = weeklyGross - gstEstimate;
+
+    function deleteReport(reportId: string) {
+    const updatedReports = reports.filter((report) => report.id !== reportId);
+
+    setReports(updatedReports);
+
+    localStorage.setItem(
+      "driver-companion-reports",
+      JSON.stringify(updatedReports)
+    );
+
+  }
 
   return (
     <main
@@ -418,11 +439,39 @@ export default function ReportsPage() {
         </section>
 
         <section className="space-y-4 rounded-2xl bg-[#3a3a3b] p-4">
+          <h2 className="text-lg font-semibold text-white">
+            Weekly Summary
+          </h2>
+
           <SummaryRow label="Weekly Gross Earnings" value={money(weeklyGross)} highlight />
-          <SummaryRow label="Estimated GST 10%" value={money(gstEstimate)} warning />
+          <SummaryRow label="Estimated GST" value={money(gstEstimate)} warning />
 
           <div className="border-t border-[#4a4a4b] pt-4">
             <SummaryRow label="Estimated Remaining" value={money(estimatedRemaining)} strong />
+          </div>
+        </section>
+
+        <section className="space-y-4 rounded-2xl bg-[#3a3a3b] p-4">
+          <h2 className="text-lg font-semibold text-white">
+            Monthly Summary
+          </h2>
+
+          <p className="text-sm text-zinc-400">
+            {monthStart.toLocaleDateString("en-AU", {
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+
+          <SummaryRow label="Monthly Gross Earnings" value={money(monthlyGross)} highlight />
+          <SummaryRow label="Estimated GST" value={money(monthlyGstEstimate)} warning />
+
+          <div className="border-t border-[#4a4a4b] pt-4">
+            <SummaryRow
+              label="Estimated Remaining"
+              value={money(monthlyEstimatedRemaining)}
+              strong
+            />
           </div>
         </section>
 
