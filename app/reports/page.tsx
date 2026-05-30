@@ -24,6 +24,7 @@ type Report = {
   payable: number;
   driverShare?: number;
   ownerShare?: number;
+  note?: string;
 };
 
 const weekDays = [
@@ -38,6 +39,22 @@ const weekDays = [
 
 function money(value: number | undefined | null) {
   return `$${(value ?? 0).toFixed(2)}`;
+}
+
+function saveNote(
+  reportId: string,
+  note: string,
+  reports: Report[],
+  setReports: React.Dispatch<React.SetStateAction<Report[]>>
+) {
+  const updatedReports = reports.map((report) =>
+    report.id === reportId
+      ? { ...report, note }
+      : report
+  );
+
+  setReports(updatedReports);
+  localStorage.setItem("shiftReports", JSON.stringify(updatedReports));
 }
 
 function calculateShiftDuration(start?: string, end?: string) {
@@ -102,8 +119,14 @@ export default function ReportsPage() {
   const router = useRouter();
   const [reports, setReports] = useState<Report[]>([]);
   const [openDate, setOpenDate] = useState<string | null>(null);
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [noteDate, setNoteDate] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState("");
 
   const weekStart = getMonday(new Date());
+
+  weekStart.setDate(weekStart.getDate() + weekOffset * 7);
+
   const weekDates = weekDays.map((day, index) => {
     const date = new Date(weekStart);
     date.setDate(weekStart.getDate() + index);
@@ -178,7 +201,34 @@ export default function ReportsPage() {
                   Week: {formatDate(weekDates[0].date)} -{" "}
                   {formatDate(weekDates[6].date)}
                 </p>
+
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                <button
+                  onClick={() => setWeekOffset((current) => current - 1)}
+                  className="rounded-xl border border-[#5e5e60] bg-[#303031] px-3 py-2 text-sm font-semibold text-zinc-200"
+                >
+                  Previous
+                </button>
+
+                <button
+                  onClick={() => setWeekOffset(0)}
+                  className={
+                    weekOffset === 0
+                      ? "rounded-xl border border-amber-500/40 bg-gradient-to-b from-[#4a4030] to-[#2d2924] px-3 py-2 text-sm font-semibold text-amber-100"
+                      : "rounded-xl border border-[#5e5e60] bg-[#303031] px-3 py-2 text-sm font-semibold text-zinc-200"
+                  }
+                >
+                  Current
+                </button>
+
+                <button
+                  onClick={() => setWeekOffset((current) => current + 1)}
+                  className="rounded-xl border border-[#5e5e60] bg-[#303031] px-3 py-2 text-sm font-semibold text-zinc-200"
+                >
+                  Next
+                </button>
               </div>
+            </div>
 
               <Link
                 href="/"
@@ -221,14 +271,22 @@ export default function ReportsPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
+                    <div className="flex items-center gap-2">
                       <p className="text-sm text-zinc-400">
                         {formatDate(weekDay.date)}
                       </p>
 
-                      <p className="mt-1 text-xl font-bold text-zinc-100">
-                        {weekDay.day}
-                      </p>
+                      {dayReports.some((report) => report.note?.trim()) && (
+                        <span className="text-[11px] font-medium text-amber-400/70">
+                          ● Note Added
+                        </span>
+                      )}
                     </div>
+
+                    <p className="mt-1 text-xl font-bold text-zinc-100">
+                      {weekDay.day}
+                    </p>
+                  </div>
 
                     <p className="text-2xl font-black text-emerald-300">
                       {money(dayTotal)}
@@ -330,12 +388,25 @@ export default function ReportsPage() {
                             <ReceiptRow label="Driver Share" value={money(driverShare)} />
                             <ReceiptRow label="Owner Share" value={money(ownerShare)} />
                           </div>
-                          <button
-                            onClick={() => deleteReport(report.id)}
-                            className="mt-4 w-full rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-200 transition hover:bg-red-500/20"
+                          <div className="mt-4 grid grid-cols-2 gap-2">
+                            <button
+                              onClick={() => {
+                                setNoteDate(report.id);
+                                setNoteText(report.note ?? "");
+                              }}
+                              className="rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/20"
                             >
-                            Delete Report
+                              {report.note ? "Edit Note" : "Add Note"}
                             </button>
+
+                            <button
+                              onClick={() => deleteReport(report.id)}
+                              className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-200 transition hover:bg-red-500/20"
+                            >
+                              Delete Report
+                            </button>
+                          </div>
+
                         </div>
                       );
                     })}
@@ -355,7 +426,47 @@ export default function ReportsPage() {
           </div>
         </section>
 
-      </div>
+            </div>
+
+      {noteDate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-5">
+          <div className="w-full max-w-md rounded-2xl border border-[#4a4a4b] bg-[#303031] p-4 shadow-xl">
+            <h2 className="text-lg font-semibold text-white">
+              Report Note
+            </h2>
+
+            <textarea
+              value={noteText}
+              onChange={(event) => setNoteText(event.target.value)}
+              placeholder="Add a note for this shift..."
+              className="mt-4 min-h-32 w-full rounded-xl border border-[#5e5e60] bg-[#242425] p-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
+            />
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => {
+                  setNoteDate(null);
+                  setNoteText("");
+                }}
+                className="rounded-xl border border-[#5e5e60] bg-[#303031] px-4 py-2 text-sm font-semibold text-zinc-200"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  saveNote(noteDate, noteText, reports, setReports);
+                  setNoteDate(null);
+                  setNoteText("");
+                }}
+                className="rounded-xl border border-amber-500/40 bg-gradient-to-b from-[#4a4030] to-[#2d2924] px-4 py-2 text-sm font-semibold text-amber-100"
+              >
+                Save Note
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
